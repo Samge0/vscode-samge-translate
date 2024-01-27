@@ -2,7 +2,10 @@
 
 [中文文档](README-zh.md) | [English](README.md) | [Github](https://github.com/Samge0/vscode-samge-translate) <br>
 
-VSCode Samge Translate is a translation plugin for VSCode that offers translation services from English to Chinese and vice versa. It also provides a feature for converting Chinese text into variable names, supporting multiple naming conventions such as `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, and `snakeCase`. This plugin leverages APIs from Baidu and other translation engines to deliver accurate translations.
+VSCode Samge Translate is a translation plugin for VSCode that offers translation services from English to Chinese and vice versa. It also provides a feature for converting Chinese text into variable names, supporting multiple naming conventions such as `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, and `snakeCase`. This plugin leverages APIs from Baidu and other translation engines to deliver accurate translations.<br>
+
+this gif displays the translation function interaction of this plugin the translation results can be displayed after the selected text in the OUTPUT panel in the bottom right corner prompt box or hovering over the text these display methods can be turned on or off in the configuration
+![SamgeTranslateDisplay](./screenshot/SamgeTranslateDisplay.gif)
 
 ## Installation
 
@@ -46,8 +49,8 @@ You can install this plugin through the VSCode Extension Marketplace by searchin
 
 Follow these steps to modify keyboard shortcuts and settings:
 
-1. **Edit Keyboard Shortcuts**: In VSCode, go to `File > Preferences > Keyboard Shortcuts` to set up your shortcuts.
-2. **Edit Configuration**: In VSCode, navigate to `File > Preferences > Settings > Extensions > Vscode Samge Translate Configuration` for configuration options.
+1. **Edit Keyboard Shortcuts**: In VSCode, go to `File > Preferences > Keyboard Shortcuts` to set up your shortcuts（searchable keyword `samge` to quickly locate relevant configuration items）.
+2. **Edit Configuration**: In VSCode, navigate to `File > Preferences > Settings > Extensions > Vscode Samge Translate Configuration` for configuration options（searchable keyword `samge` to quickly locate relevant configuration items）.
 
 ## Common Questions
 
@@ -95,8 +98,14 @@ Various display styles for translations:
 Chinese to variable name conversion (supports converting mixed Chinese/English or pure English into different camelCase rules):
 ![TestCustomVariables](./screenshot/TestCustomVariables.png)
 
+Customizing keyboard shortcuts gif:
+![KeyboardShortcuts.gif](./screenshot/KeyboardShortcuts.gif)
+
 Customizing keyboard shortcuts:
 ![KeyboardShortcuts](./screenshot/KeyboardShortcuts.png)
+
+Configuration information gif:
+![ExtensionsVscodeSamgeTranslateConfiguration.gif](./screenshot/ExtensionsVscodeSamgeTranslateConfiguration.gif)
 
 Configuration information:
 ![ExtensionsVscodeSamgeTranslateConfiguration](./screenshot/ExtensionsVscodeSamgeTranslateConfiguration.png)

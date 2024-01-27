@@ -2,7 +2,10 @@
 
 [中文文档](README-zh.md) | [English](README.md) | [Github](https://github.com/Samge0/vscode-samge-translate) <br>
 
-VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英文到中文`、从`中文到英文`的翻译功能，以及`中文转变量名`功能支持多规则变量名（`camelCase、capitalCase、constantCase、dotCase、headerCase、noCase、paramCase、pascalCase、pathCase、snakeCase`）转换操作。使用百度/其他`翻译引擎API`来实现准确的翻译结果。
+VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英文到中文`、从`中文到英文`的翻译功能，以及`中文转变量名`功能支持多规则变量名（`camelCase、capitalCase、constantCase、dotCase、headerCase、noCase、paramCase、pascalCase、pathCase、snakeCase`）转换操作。使用百度/其他`翻译引擎API`来实现准确的翻译结果。<br>
+
+这个GIF展示本插件的翻译功能交互，翻译结果可在选中文本后面展示、OUTPUT面板展示、右下角提示框展示、鼠标放在文本上悬浮展示，这些展示方式可在配置中开启或关闭。
+![SamgeTranslateDisplay](./screenshot/SamgeTranslateDisplay.gif)
 
 ## 安装
 
@@ -47,8 +50,8 @@ VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英
 
 您可以通过以下步骤来编辑快捷键和配置项：
 
-1. **编辑快捷键**：在VSCode中，通过 `File > Preferences > Keyboard Shortcuts` (文件 > 首选项 > 键盘快捷方式) 来设置您的快捷键。
-2. **编辑配置**：在VSCode中，通过 `File > Preferences > Settings > Extensions > Vscode Samge Translate Configuration` (文件 > 首选项 > 设置 > 扩展 > Vscode Samge Translate Configuration) 来设置您的配置项。
+1. **编辑快捷键**：在VSCode中，通过 `File > Preferences > Keyboard Shortcuts` (文件 > 首选项 > 键盘快捷方式) 来设置您的快捷键（可搜索关键词`samge`快速定位相关配置项）。
+2. **编辑配置**：在VSCode中，通过 `File > Preferences > Settings > Extensions > Vscode Samge Translate Configuration` (文件 > 首选项 > 设置 > 扩展 > Vscode Samge Translate Configuration) 来设置您的配置项（可搜索关键词`samge`快速定位相关配置项）。
 
 ## 常见问题
 
@@ -97,8 +100,14 @@ VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英
 中文转变量名（中英混合/纯英文也可以转不同驼峰规则变量名）：
 ![TestCustomVariables](./screenshot/TestCustomVariables.png)
 
+自定义快捷键.gif：
+![KeyboardShortcuts.gif](./screenshot/KeyboardShortcuts.gif)
+
 自定义快捷键：
 ![KeyboardShortcuts](./screenshot/KeyboardShortcuts.png)
+
+配置信息.gif：
+![ExtensionsVscodeSamgeTranslateConfiguration.gif](./screenshot/ExtensionsVscodeSamgeTranslateConfiguration.gif)
 
 配置信息：
 ![ExtensionsVscodeSamgeTranslateConfiguration](./screenshot/ExtensionsVscodeSamgeTranslateConfiguration.png)
