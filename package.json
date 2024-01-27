@@ -1,169 +1,172 @@
 {
-  "name": "vscode-samge-translate",
-  "displayName": "Vscode Samge Translate 翻译助手",
-  "description": "Quickly translate text right in your code 🚀 支持多种翻译命令（英译中、中译英、中文转多规则命名变量等），支持多种结果展示方式，支持配置百度翻译引擎。",
-  "version": "0.0.2",  
-  "engines": {
-      "vscode": "^1.85.0"
-  },
-  "categories": [
-      "Other"
-  ],
-  "activationEvents": [
-      "onStartupFinished"
-  ],
-  "main": "./dist/extension.js",
-  "contributes": {
-      "commands": [
-          {
-              "command": "samge.translate.en2zh",
-              "title": "Samge Translate：英译中-en2zh"
-          },
-          {
-              "command": "samge.translate.en2zhReplace",
-              "title": "Samge Translate：英译中并替换-en2zhReplace"
-          },
-          {
-              "command": "samge.translate.zh2en",
-              "title": "Samge Translate：中译英-zh2en"
-          },
-          {
-              "command": "samge.translate.zh2enReplace",
-              "title": "Samge Translate：中译英并替换-zh2enReplace"
-          },
-          {
-              "command": "samge.translate.zh2var",
-              "title": "Samge Translate：中文转变量名-zh2var"
-          }
-      ],
-      "keybindings": [
-          {
-              "command": "samge.translate.en2zh",
-              "key": "alt+x",
-              "mac": "alt+x"
-          },
-          {
-              "command": "samge.translate.en2zhReplace",
-              "key": "ctrl+shift+alt+x",
-              "mac": "ctrl+shift+alt+x"
-          },
-          {
-              "command": "samge.translate.zh2en",
-              "key": "alt+z",
-              "mac": "alt+z"
-          },
-          {
-              "command": "samge.translate.zh2enReplace",
-              "key": "ctrl+shift+alt+z",
-              "mac": "ctrl+shift+alt+z"
-          },
-          {
-              "command": "samge.translate.zh2var",
-              "key": "shift+alt+w",
-              "mac": "shift+alt+w"
-          }
-      ],
-      "configuration": {
-          "title": "Vscode Samge Translate Configuration - 翻译配置",
-          "properties": {
-              "samge.translate.enable": {
-                  "type": "boolean",
-                  "default": true,
-                  "description": "Enable - 是否启用插件，Default：true"
-              },
-              "samge.translate.enableHover": {
-                  "type": "boolean",
-                  "default": false,
-                  "description": "Enable Hover - 是否在鼠标悬浮时自动翻译，Default：false"
-              },
-              "samge.translate.enableOutput": {
-                  "type": "boolean",
-                  "default": true,
-                  "description": "Enable OUTPUT Result - 是否在OUTPUT窗口展示，Default：true"
-              },
-              "samge.translate.enableRightDisplay": {
-                  "type": "boolean",
-                  "default": true,
-                  "description": "Enable Right Display - 是否在选中文本右侧展示翻译结果，Default：true"
-              },
-              "samge.translate.languageFrom": {
-                  "type": "string",
-                  "default": "en",
-                  "enum": [
-                      "en",
-                      "zh"
-                  ],
-                  "description": "Translate From - 翻译源语言，Default：en"
-              },
-              "samge.translate.languageTo": {
-                  "type": "string",
-                  "default": "zh",
-                  "enum": [
-                      "en",
-                      "zh"
-                  ],
-                  "description": "Translate To - 翻译目标语言，Default：zh"
-              },
-              "samge.translate.providerName": {
-                  "type": "string",
-                  "default": "baidu",
-                  "enum": [
-                      "baidu"
-                  ],
-                  "description": "Translate Provider - 翻译引擎提供者，Default：baidu"
-              },
-              "samge.translate.providerAppId": {
-                  "type": "string",
-                  "description": "AppId - 翻译引擎的AppId"
-              },
-              "samge.translate.providerAppSecret": {
-                  "type": "string",
-                  "description": "AppSecret - 翻译引擎的AppSecret"
-              },
-              "samge.translate.limitSingleMaximum": {
-                  "type": "integer",
-                  "default": 1000,
-                  "description": "Maximum Single Translation Character - 单次翻译最大字符限制，超过自动截断，Default：1000"
-              }
-          }
-      }
-  },
-  "scripts": {
-      "vscode:prepublish": "yarn run package",
-      "compile": "webpack",
-      "watch": "webpack --watch",
-      "package": "webpack --mode production --devtool hidden-source-map",
-      "compile-tests": "tsc -p . --outDir out",
-      "watch-tests": "tsc -p . -w --outDir out",
-      "pretest": "yarn run compile-tests && yarn run compile && yarn run lint",
-      "lint": "eslint src --ext ts",
-      "test": "vscode-test"
-  },
-  "devDependencies": {
-      "@types/md5": "^2.3.5",
-      "@types/mocha": "^10.0.6",
-      "@types/node": "18.x",
-      "@types/qs": "^6.9.11",
-      "@types/vscode": "^1.85.0",
-      "@typescript-eslint/eslint-plugin": "^6.15.0",
-      "@typescript-eslint/parser": "^6.15.0",
-      "@vscode/test-cli": "^0.0.4",
-      "@vscode/test-electron": "^2.3.8",
-      "eslint": "^8.56.0",
-      "ts-loader": "^9.5.1",
-      "typescript": "^5.3.3",
-      "webpack": "^5.89.0",
-      "webpack-cli": "^5.1.4"
-  },
-  "dependencies": {
-      "axios": "^1.6.7",
-      "md5": "^2.3.0",
-      "qs": "^6.11.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Samge0/vscode-samge-translate.git"
-  },
-  "publisher": "Samge",
-  "icon": "icon.png"
+    "name": "vscode-samge-translate",
+    "displayName": "Vscode Samge Translate 翻译助手",
+    "description": "Quickly translate text right in your code 🚀 支持多种翻译命令（英译中、中译英、中文转多规则命名变量等），支持多种结果展示方式，支持配置百度翻译引擎。",
+    "version": "0.0.2",
+    "engines": {
+        "vscode": "^1.85.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "samge.translate.en2zh",
+                "title": "Samge Translate：英译中-en2zh"
+            },
+            {
+                "command": "samge.translate.en2zhReplace",
+                "title": "Samge Translate：英译中并替换-en2zhReplace"
+            },
+            {
+                "command": "samge.translate.zh2en",
+                "title": "Samge Translate：中译英-zh2en"
+            },
+            {
+                "command": "samge.translate.zh2enReplace",
+                "title": "Samge Translate：中译英并替换-zh2enReplace"
+            },
+            {
+                "command": "samge.translate.zh2var",
+                "title": "Samge Translate：中文转变量名-zh2var"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "samge.translate.en2zh",
+                "key": "alt+x",
+                "mac": "alt+x"
+            },
+            {
+                "command": "samge.translate.en2zhReplace",
+                "key": "ctrl+shift+alt+x",
+                "mac": "ctrl+shift+alt+x"
+            },
+            {
+                "command": "samge.translate.zh2en",
+                "key": "alt+z",
+                "mac": "alt+z"
+            },
+            {
+                "command": "samge.translate.zh2enReplace",
+                "key": "ctrl+shift+alt+z",
+                "mac": "ctrl+shift+alt+z"
+            },
+            {
+                "command": "samge.translate.zh2var",
+                "key": "shift+alt+w",
+                "mac": "shift+alt+w"
+            }
+        ],
+        "configuration": {
+            "title": "Vscode Samge Translate Configuration - 翻译配置",
+            "properties": {
+                "samge.translate.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable - 是否启用插件，Default：true"
+                },
+                "samge.translate.enableHover": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable Hover - 是否在鼠标悬浮时自动翻译，Default：false"
+                },
+                "samge.translate.enableOutput": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable OUTPUT Result - 是否在OUTPUT窗口展示，Default：true"
+                },
+                "samge.translate.enableRightDisplay": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable Right Display - 是否在选中文本右侧展示翻译结果，Default：true"
+                },
+                "samge.translate.languageFrom": {
+                    "type": "string",
+                    "default": "en",
+                    "enum": [
+                        "en",
+                        "zh"
+                    ],
+                    "description": "Translate From - 翻译源语言，Default：en"
+                },
+                "samge.translate.languageTo": {
+                    "type": "string",
+                    "default": "zh",
+                    "enum": [
+                        "en",
+                        "zh"
+                    ],
+                    "description": "Translate To - 翻译目标语言，Default：zh"
+                },
+                "samge.translate.providerName": {
+                    "type": "string",
+                    "default": "baidu",
+                    "enum": [
+                        "baidu",
+                        "tencent"
+                    ],
+                    "description": "Translate Provider - 翻译引擎提供者，Default：baidu"
+                },
+                "samge.translate.providerAppId": {
+                    "type": "string",
+                    "description": "AppId - 翻译引擎的AppId"
+                },
+                "samge.translate.providerAppSecret": {
+                    "type": "string",
+                    "description": "AppSecret - 翻译引擎的AppSecret"
+                },
+                "samge.translate.limitSingleMaximum": {
+                    "type": "integer",
+                    "default": 1000,
+                    "description": "Maximum Single Translation Character - 单次翻译最大字符限制，超过自动截断，Default：1000"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "yarn run package",
+        "compile": "webpack",
+        "watch": "webpack --watch",
+        "package": "webpack --mode production --devtool hidden-source-map",
+        "compile-tests": "tsc -p . --outDir out",
+        "watch-tests": "tsc -p . -w --outDir out",
+        "pretest": "yarn run compile-tests && yarn run compile && yarn run lint",
+        "lint": "eslint src --ext ts",
+        "test": "vscode-test"
+    },
+    "devDependencies": {
+        "@types/crypto-js": "^4.2.2",
+        "@types/md5": "^2.3.5",
+        "@types/mocha": "^10.0.6",
+        "@types/node": "18.x",
+        "@types/qs": "^6.9.11",
+        "@types/vscode": "^1.85.0",
+        "@typescript-eslint/eslint-plugin": "^6.15.0",
+        "@typescript-eslint/parser": "^6.15.0",
+        "@vscode/test-cli": "^0.0.4",
+        "@vscode/test-electron": "^2.3.8",
+        "eslint": "^8.56.0",
+        "ts-loader": "^9.5.1",
+        "typescript": "^5.3.3",
+        "webpack": "^5.89.0",
+        "webpack-cli": "^5.1.4"
+    },
+    "dependencies": {
+        "axios": "^1.6.7",
+        "crypto-js": "^4.2.0",
+        "md5": "^2.3.0",
+        "qs": "^6.11.2"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Samge0/vscode-samge-translate.git"
+    },
+    "publisher": "Samge",
+    "icon": "icon.png"
 }

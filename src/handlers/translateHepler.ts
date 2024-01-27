@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import * as camelCase from './camelCase';
 import * as decoration from './decoration';
 import * as translateBaidu from './translateBaidu';
+import * as translateTencent from './translateTencent';
 
 // the last editor for the operation
 let lastEditor: vscode.TextEditor | undefined = undefined;
@@ -32,6 +33,13 @@ export function updateConfig() {
 	providerAppId = properties.get<string>('samge.translate.providerAppId', ''); // 翻译引擎的appId
 	providerAppSecret = properties.get<string>('samge.translate.providerAppSecret', ''); // 翻译引擎的appSecret
 	limitSingleMaximum = properties.get<number>('samge.translate.limitSingleMaximum', 1000); // 单次翻译最大字符限制，超过自动截断
+}
+
+
+// translation engine type
+export enum ProviderNameEnum {
+    Baidu = "baidu",
+    Tencent = "tencent"
 }
 
 
@@ -75,8 +83,16 @@ export async function translateText(
 	}
 	console.log(`preprocessed text to be translated：${text}`);
 
-	if ("baidu" === providerName) {
+	if (ProviderNameEnum.Baidu === providerName) {
 		return translateBaidu.translateText(
+			text, 
+			providerAppId, 
+			providerAppSecret, 
+			languageFrom, 
+			languageTo
+		);
+	}else if (ProviderNameEnum.Tencent === providerName) {
+		return translateTencent.translateText(
 			text, 
 			providerAppId, 
 			providerAppSecret, 

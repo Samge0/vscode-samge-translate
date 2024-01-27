@@ -3,6 +3,9 @@ import qs from 'qs';
 import md5 from 'md5';
 
 
+// baidu translate - 百度翻译
+
+
 // perform translation operations
 export async function translateText(
 	text: string, 
