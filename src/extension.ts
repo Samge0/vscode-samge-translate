@@ -10,7 +10,7 @@ import * as decoration from './handlers/decoration';
 export function activate(context: vscode.ExtensionContext) {
 
 	// read properties
-	translateHepler.updateConfig();
+	translateHepler.updateConfig(context);
 
 
 	if (!translateHepler.enableThis) {
@@ -23,7 +23,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(event => {
         if (event.affectsConfiguration('samge.translate')) {
 			console.log("configuration changes update");
-            translateHepler.updateConfig();
+            translateHepler.updateConfig(context, event);
         }
     }));
 

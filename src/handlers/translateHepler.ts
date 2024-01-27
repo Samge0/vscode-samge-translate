@@ -5,6 +5,21 @@ import * as decoration from './decoration';
 import * as translateBaidu from './translateBaidu';
 import * as translateTencent from './translateTencent';
 
+// translation engine type
+export enum ProviderNameEnum {
+    Baidu = "baidu",
+    Tencent = "tencent"
+}
+
+// a model for storing translation engines app id and app secret
+interface ProviderData {
+    providerAppId: string;
+    providerAppSecret: string;
+}
+
+// cache obj
+let globalState: vscode.Memento | undefined = undefined;
+
 // the last editor for the operation
 let lastEditor: vscode.TextEditor | undefined = undefined;
 
@@ -21,7 +36,10 @@ let limitSingleMaximum: number = 1000; // 单次翻译最大字符限制，超�
 
 
 // update configuration
-export function updateConfig() {
+export function updateConfig(
+	context: vscode.ExtensionContext,
+	event: vscode.ConfigurationChangeEvent | undefined = undefined,
+) {
 	const properties = vscode.workspace.getConfiguration();
 	enableThis = properties.get<boolean>('samge.translate.enable', true); // 是否启用插件，Default：true
 	enableHover = properties.get<boolean>('samge.translate.enableHover', false); // 是否在鼠标悬浮时自动翻译，Default：false
@@ -33,13 +51,75 @@ export function updateConfig() {
 	providerAppId = properties.get<string>('samge.translate.providerAppId', ''); // 翻译引擎的appId
 	providerAppSecret = properties.get<string>('samge.translate.providerAppSecret', ''); // 翻译引擎的appSecret
 	limitSingleMaximum = properties.get<number>('samge.translate.limitSingleMaximum', 1000); // 单次翻译最大字符限制，超过自动截断
+
+	// init globalState obj
+	if (!globalState) {
+		globalState = context.globalState;
+	}
+
+	// parse ProviderData cache
+	if (event) {
+
+		// if the value of provider app id or provider app secret changes update the cache
+		const isProviderValueChange = event.affectsConfiguration('samge.translate.providerAppId') || event.affectsConfiguration('samge.translate.providerAppSecret');
+		if (isProviderValueChange) {
+			console.log(`isProviderValueChange：${providerAppId} ${providerAppSecret}`);
+			setProviderDataCache(context, providerName, providerAppId, providerAppSecret);
+		}
+
+		// if the translation engine is switched read cache
+		const isProviderNameChange = event.affectsConfiguration('samge.translate.providerName');
+		if (isProviderNameChange) {
+			const ProviderDataCache = getProviderDataCache(providerName);
+			console.log(`isProviderNameChange${providerName} ${ProviderDataCache?.providerAppId}  ${ProviderDataCache?.providerAppSecret}`);
+			if (ProviderDataCache) {
+				providerAppId = ProviderDataCache.providerAppId ?? "";
+				providerAppSecret = ProviderDataCache.providerAppSecret ?? "";
+
+				// update cache values to vscode configuration
+				 properties.update('samge.translate.providerAppId', providerAppId, vscode.ConfigurationTarget.Global).then(() => {
+					console.log(`【providerAppId】 Configuration updated successfully`);
+				}, (error) => {
+					console.error(`【providerAppId】 Error updating configuration:`, error);
+				});
+				 properties.update('samge.translate.providerAppSecret', providerAppSecret, vscode.ConfigurationTarget.Global).then(() => {
+					console.log('【providerAppSecret】 Configuration updated successfully');
+				}, (error) => {
+					console.error('【providerAppSecret】 Error updating configuration:', error);
+				});
+			}
+		}
+	}
 }
 
 
-// translation engine type
-export enum ProviderNameEnum {
-    Baidu = "baidu",
-    Tencent = "tencent"
+// read cached data from translation engine providers
+export function setProviderDataCache(
+	context: vscode.ExtensionContext,
+	cacheKey: string,
+	providerAppId: string,
+	providerAppSecret: string,
+) {
+	if (!cacheKey) {
+		return;
+	}
+	if (!globalState) {
+		globalState = context.globalState;
+	}
+	const providerData: ProviderData = {
+		providerAppId: providerAppId,
+		providerAppSecret: providerAppSecret
+	};
+	globalState.update(cacheKey, providerData);
+}
+
+
+// read cached data from translation engine providers
+export function getProviderDataCache(cacheKey: string): ProviderData | undefined {
+	if (!globalState || !cacheKey) {
+		return undefined;
+	}
+	return globalState.get(cacheKey) as ProviderData;
 }
 
 

@@ -62,7 +62,7 @@ Follow these steps to modify keyboard shortcuts and settings:
 - What translation engines are currently supported?
     - <input type="checkbox" checked>Baidu</input>
     - <input type="checkbox">Alibaba</input>
-    - <input type="checkbox">Tencent</input>
+    - <input type="checkbox" checked>Tencent</input>
     - <input type="checkbox">Volcano Engine</input>
     - <input type="checkbox">Youdao</input>
     - <input type="checkbox">DeepL</input>
@@ -86,6 +86,8 @@ If you have any suggestions or code contributions, please feel free to submit is
 This VSCode plugin is released under the MIT License.
 
 ### Related Screenshots
+automatically cache translation engine configuration parameters for easy switching：
+![SamgeTranslateConfigAutoCache](./screenshot/SamgeTranslateConfigAutoCache.gif)
 
 Various display styles for translations:
 ![TranslateDisplayStyle](./screenshot/TranslateDisplayStyle.png)

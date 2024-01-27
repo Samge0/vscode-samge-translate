@@ -63,7 +63,7 @@ VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英
 - 当前支持的翻译引擎有哪些？
     - <input type="checkbox" checked>百度</input>
     - <input type="checkbox">阿里</input>
-    - <input type="checkbox">腾讯</input>
+    - <input type="checkbox" checked>腾讯</input>
     - <input type="checkbox">火山</input>
     - <input type="checkbox">有道</input>
     - <input type="checkbox">deepl</input>
@@ -88,6 +88,9 @@ VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英
 
 
 ### 相关截图
+自动缓存翻译引擎配置参数，方便切换：
+![SamgeTranslateConfigAutoCache](./screenshot/SamgeTranslateConfigAutoCache.gif)
+
 翻译的多种结果展示方式：
 ![TranslateDisplayStyle](./screenshot/TranslateDisplayStyle.png)
 
