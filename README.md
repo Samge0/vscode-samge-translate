@@ -73,9 +73,7 @@ Follow these steps to modify keyboard shortcuts and settings:
 
 ## Release Notes
 
-### Version 0.0.1
-
-Development of a VSCode translation plugin using the Baidu translation engine is complete. This version provides translation features from English to Chinese and vice versa, as well as a feature for converting Chinese into variable names supporting multiple naming rules (`camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, `snakeCase`).
+[Click Here To View Release Notes>>](./CHANGELOG.md)
 
 ---
 

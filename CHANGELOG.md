@@ -1,10 +1,10 @@
 # Change Log
 
-### 0.0.2 - 2024-01-17
+### 0.0.2 - 2024-01-27
 
 - add icon
 
-### 0.0.1 - 2024-01-17
+### 0.0.1 - 2024-01-27
 
 - Added translation features using the Baidu translation engine.
 - Support for translation from English to Chinese.

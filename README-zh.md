@@ -74,13 +74,7 @@ VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英
 
 ## 更新记录
 
-### 0.0.2
-
-add icon
-
-### 0.0.1
-
-使用百度翻译引擎完成VSCode的翻译插件开发，提供了从`英文到中文`、从`中文到英文`的翻译功能，以及`中文转变量名`功能支持多规则变量名（`camelCase、capitalCase、constantCase、dotCase、headerCase、noCase、paramCase、pascalCase、pathCase、snakeCase`）转换操作。
+[点击这里查看更新记录>>](./CHANGELOG.md)
 
 ---
 
