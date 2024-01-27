@@ -63,16 +63,16 @@ Follow these steps to modify keyboard shortcuts and settings:
     - [DeepL](https://www.deepl.com/zh/pro#developer): 500,000 free characters/month
 
 - What translation engines are currently supported?
-    - <input type="checkbox" checked>Baidu</input>
-    - <input type="checkbox">Alibaba</input>
-    - <input type="checkbox" checked>Tencent</input>
-    - <input type="checkbox">Volcano Engine</input>
-    - <input type="checkbox">Youdao</input>
-    - <input type="checkbox">DeepL</input>
+    - [x] Baidu
+    - [ ] Alibaba
+    - [x] Tencent
+    - [ ] Volcano Engine
+    - [ ] Youdao
+    - [ ] DeepL
 
 - What translation languages are currently supported?
-    - <input type="checkbox" checked>English (en)</input>
-    - <input type="checkbox" checked>Chinese (zh)</input>
+    - [x] English (en)
+    - [x] Chinese (zh)
 
 ## Release Notes
 
