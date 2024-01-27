@@ -1,9 +1,23 @@
 # Change Log
 
-All notable changes to the "vscode-samge-translate" extension will be documented in this file.
+### 0.0.2 - 2024-01-17
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+- add icon
 
-## [Unreleased]
+### 0.0.1 - 2024-01-17
 
-- Initial release
+- Added translation features using the Baidu translation engine.
+- Support for translation from English to Chinese.
+- Support for translation from Chinese to English.
+- Added a feature for converting Chinese text to variable names.
+- The Chinese to variable name conversion supports multiple naming conventions:
+  - `camelCase`
+  - `capitalCase`
+  - `constantCase`
+  - `dotCase`
+  - `headerCase`
+  - `noCase`
+  - `paramCase`
+  - `pascalCase`
+  - `pathCase`
+  - `snakeCase`

@@ -1,6 +1,6 @@
 # VSCode Samge Translate 翻译助手 插件
 
-[中文文档](README-zh.md) | [English](README.md) <br>
+[中文文档](README-zh.md) | [English](README.md) | [Github](https://github.com/Samge0/vscode-samge-translate) <br>
 
 VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英文到中文`、从`中文到英文`的翻译功能，以及`中文转变量名`功能支持多规则变量名（`camelCase、capitalCase、constantCase、dotCase、headerCase、noCase、paramCase、pascalCase、pathCase、snakeCase`）转换操作。使用百度/其他`翻译引擎API`来实现准确的翻译结果。
 
@@ -73,6 +73,10 @@ VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英
     - <input type="checkbox" checked>zh</input>
 
 ## 更新记录
+
+### 0.0.2
+
+add icon
 
 ### 0.0.1
 
