@@ -164,5 +164,6 @@
     "type": "git",
     "url": "https://github.com/Samge0/vscode-samge-translate.git"
   },
-  "publisher": "Samge"
+  "publisher": "Samge",
+  "icon": "icon.png"
 }
