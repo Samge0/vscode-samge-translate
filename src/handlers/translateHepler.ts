@@ -17,9 +17,6 @@ interface ProviderData {
     providerAppSecret: string;
 }
 
-// cache obj
-let globalState: vscode.Memento | undefined = undefined;
-
 // the last editor for the operation
 let lastEditor: vscode.TextEditor | undefined = undefined;
 
@@ -52,11 +49,6 @@ export function updateConfig(
 	providerAppSecret = properties.get<string>('samge.translate.providerAppSecret', ''); // 翻译引擎的appSecret
 	limitSingleMaximum = properties.get<number>('samge.translate.limitSingleMaximum', 1000); // 单次翻译最大字符限制，超过自动截断
 
-	// init globalState obj
-	if (!globalState) {
-		globalState = context.globalState;
-	}
-
 	// parse ProviderData cache
 	if (event) {
 
@@ -70,7 +62,7 @@ export function updateConfig(
 		// if the translation engine is switched read cache
 		const isProviderNameChange = event.affectsConfiguration('samge.translate.providerName');
 		if (isProviderNameChange) {
-			const ProviderDataCache = getProviderDataCache(providerName);
+			const ProviderDataCache = getProviderDataCache(context, providerName);
 			console.log(`isProviderNameChange${providerName} ${ProviderDataCache?.providerAppId}  ${ProviderDataCache?.providerAppSecret}`);
 			if (ProviderDataCache) {
 				providerAppId = ProviderDataCache.providerAppId ?? "";
@@ -103,23 +95,23 @@ export function setProviderDataCache(
 	if (!cacheKey) {
 		return;
 	}
-	if (!globalState) {
-		globalState = context.globalState;
-	}
 	const providerData: ProviderData = {
 		providerAppId: providerAppId,
 		providerAppSecret: providerAppSecret
 	};
-	globalState.update(cacheKey, providerData);
+	context.globalState.update(cacheKey, providerData);
 }
 
 
 // read cached data from translation engine providers
-export function getProviderDataCache(cacheKey: string): ProviderData | undefined {
-	if (!globalState || !cacheKey) {
+export function getProviderDataCache(
+	context: vscode.ExtensionContext, 
+	cacheKey: string
+): ProviderData | undefined {
+	if (!cacheKey) {
 		return undefined;
 	}
-	return globalState.get(cacheKey) as ProviderData;
+	return context.globalState.get(cacheKey) as ProviderData;
 }
 
 
