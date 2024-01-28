@@ -1,14 +1,17 @@
 import * as tip from './tip';
 import * as vscode from 'vscode';
 import * as camelCase from './camelCase';
+import * as cryptoUtil from './cryptoUtil';
 import * as decoration from './decoration';
 import * as translateBaidu from './translateBaidu';
+import * as translateAlibaba from './translateAlibaba';
 import * as translateTencent from './translateTencent';
 
 // translation engine type
 export enum ProviderNameEnum {
     Baidu = "baidu",
-    Tencent = "tencent"
+    Tencent = "tencent",
+    Alibaba = "alibaba",
 }
 
 // a model for storing translation engines app id and app secret
@@ -63,25 +66,34 @@ export function updateConfig(
 		const isProviderNameChange = event.affectsConfiguration('samge.translate.providerName');
 		if (isProviderNameChange) {
 			const ProviderDataCache = getProviderDataCache(context, providerName);
-			console.log(`isProviderNameChange${providerName} ${ProviderDataCache?.providerAppId}  ${ProviderDataCache?.providerAppSecret}`);
 			if (ProviderDataCache) {
-				providerAppId = ProviderDataCache.providerAppId ?? "";
-				providerAppSecret = ProviderDataCache.providerAppSecret ?? "";
-
+				console.log(`isProviderNameChange：${providerName} ${ProviderDataCache?.providerAppId}  ${ProviderDataCache?.providerAppSecret}`);
+				providerAppId = ProviderDataCache?.providerAppId ?? "";
+				providerAppSecret = ProviderDataCache?.providerAppSecret ?? "";
+	
 				// update cache values to vscode configuration
-				 properties.update('samge.translate.providerAppId', providerAppId, vscode.ConfigurationTarget.Global).then(() => {
-					console.log(`【providerAppId】 Configuration updated successfully`);
-				}, (error) => {
-					console.error(`【providerAppId】 Error updating configuration:`, error);
-				});
-				 properties.update('samge.translate.providerAppSecret', providerAppSecret, vscode.ConfigurationTarget.Global).then(() => {
-					console.log('【providerAppSecret】 Configuration updated successfully');
-				}, (error) => {
-					console.error('【providerAppSecret】 Error updating configuration:', error);
-				});
+				updateConfigurations(properties, providerAppId, providerAppSecret);
 			}
 		}
 	}
+}
+
+
+// update configuration
+function updateConfigurations(
+	properties: vscode.WorkspaceConfiguration,
+	providerAppId: string,
+	providerAppSecret: string,
+) {
+    try {
+        properties.update('samge.translate.providerAppId', providerAppId, vscode.ConfigurationTarget.Global);
+        console.log(`【providerAppId】 Configuration updated successfully => ${providerAppId}`);
+
+        properties.update('samge.translate.providerAppSecret', providerAppSecret, vscode.ConfigurationTarget.Global);
+        console.log(`【providerAppSecret】 Configuration updated successfully => ${providerAppSecret}`);
+    } catch (error) {
+        console.error('Error updating configuration:', error);
+    }
 }
 
 
@@ -96,10 +108,11 @@ export function setProviderDataCache(
 		return;
 	}
 	const providerData: ProviderData = {
-		providerAppId: providerAppId,
-		providerAppSecret: providerAppSecret
+		providerAppId: cryptoUtil.encryptData(providerAppId),
+		providerAppSecret: cryptoUtil.encryptData(providerAppSecret)
 	};
-	context.globalState.update(cacheKey, providerData);
+	console.log(`setProviderDataCache ${cacheKey} ${providerAppId} ${providerAppSecret}`);
+	context.globalState.update(cacheKey.toLowerCase(), providerData);
 }
 
 
@@ -111,8 +124,22 @@ export function getProviderDataCache(
 	if (!cacheKey) {
 		return undefined;
 	}
-	return context.globalState.get(cacheKey) as ProviderData;
+	console.log(`getProviderDataCache ${cacheKey}`);
+	const cacheValue = context.globalState.get(cacheKey.toLowerCase()) as ProviderData;
+	if (cacheValue) {
+		cacheValue.providerAppId = cryptoUtil.decryptData(cacheValue.providerAppId),
+		cacheValue.providerAppSecret = cryptoUtil.decryptData(cacheValue.providerAppSecret);
+	}
+	return cacheValue;
 }
+
+
+// translation engine invocation strategy
+const translationStrategies = {
+    [ProviderNameEnum.Baidu.toLowerCase()]: translateBaidu.translateText,
+    [ProviderNameEnum.Tencent.toLowerCase()]: translateTencent.translateText,
+    [ProviderNameEnum.Alibaba.toLowerCase()]: translateAlibaba.translateText
+};
 
 
 // perform translation operations
@@ -155,24 +182,11 @@ export async function translateText(
 	}
 	console.log(`preprocessed text to be translated：${text}`);
 
-	if (ProviderNameEnum.Baidu === providerName) {
-		return translateBaidu.translateText(
-			text, 
-			providerAppId, 
-			providerAppSecret, 
-			languageFrom, 
-			languageTo
-		);
-	}else if (ProviderNameEnum.Tencent === providerName) {
-		return translateTencent.translateText(
-			text, 
-			providerAppId, 
-			providerAppSecret, 
-			languageFrom, 
-			languageTo
-		);
+	const translate = translationStrategies[providerName.toLowerCase()];
+	if (translate) {
+		return translate(text, providerAppId, providerAppSecret, languageFrom, languageTo);
 	} else {
-		return `【Error】the translation engine is currently not supported：[${providerName}]，the currently supported translation engines include：baidu`;
+		return `【Error】the translation engine is currently not supported：[${providerName}]，the currently supported translation engines include：${Object.keys(translationStrategies).join(', ')}`;
 	}
     
 }

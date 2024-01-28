@@ -109,9 +109,10 @@
                     "default": "baidu",
                     "enum": [
                         "baidu",
+                        "alibaba",
                         "tencent"
                     ],
-                    "description": "Translate Provider - 翻译引擎提供者，Default：baidu"
+                    "description": "Translate Provider - 翻译引擎提供者，Default：baidu\n【Note】after switching the translation engine, click on other blank spaces first before, VsCode will refresh the ui\n【注意】切换翻译引擎后，先点击其他空白处，VsCode才会刷新UI"
                 },
                 "samge.translate.providerAppId": {
                     "type": "string",
@@ -158,6 +159,10 @@
         "webpack-cli": "^5.1.4"
     },
     "dependencies": {
+        "@alicloud/alimt20181012": "1.0.3",
+        "@alicloud/darabonba-env": "^1.0.0",
+        "@alicloud/openapi-client": "^0.4.1",
+        "@alicloud/tea-typescript": "^1.7.1",
         "axios": "^1.6.7",
         "crypto-js": "^4.2.0",
         "md5": "^2.3.0",
