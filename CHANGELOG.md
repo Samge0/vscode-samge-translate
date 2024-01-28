@@ -1,13 +1,18 @@
 # Change Log
 
+### 0.0.4 - 2024-01-28
+
+- Add alibaba translate engine support
+- Change the cache configured by the translation engine to encrypted access
+
 ### 0.0.3 - 2024-01-28
 
-- add tencent translate engine support
-- add translate engine config cache
+- Add tencent translate engine support
+- Add translate engine config cache
 
 ### 0.0.2 - 2024-01-27
 
-- add icon
+- Add icon
 
 ### 0.0.1 - 2024-01-27
 

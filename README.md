@@ -63,9 +63,9 @@ Follow these steps to modify keyboard shortcuts and settings:
     - [DeepL](https://www.deepl.com/zh/pro#developer): 500,000 free characters/month
 
 - What translation engines are currently supported?
-    - [x] Baidu
-    - [ ] Alibaba
-    - [x] Tencent
+    - [x] Baidu (baidu)
+    - [x] Alibaba (alibaba)
+    - [x] Tencent (tencent)
     - [ ] Volcano Engine
     - [ ] Youdao
     - [ ] DeepL
@@ -109,6 +109,10 @@ Configuration information gif:
 
 Configuration information:
 ![ExtensionsVscodeSamgeTranslateConfiguration](./screenshot/ExtensionsVscodeSamgeTranslateConfiguration.png)
+
+### Dev
+
+[click here to view plugin development related content>>](./README-dev.md)
 
 ### Technical Communication
 

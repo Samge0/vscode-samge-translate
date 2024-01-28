@@ -64,9 +64,9 @@ VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英
     - [deepl](https://www.deepl.com/zh/pro#developer)：：50万免费字符/月
 
 - 当前支持的翻译引擎有哪些？
-    - [x] 百度
-    - [ ] 阿里
-    - [x] 腾讯
+    - [x] 百度 (baidu)
+    - [x] 阿里 (alibaba)
+    - [x] 腾讯 (tencent)
     - [ ] 火山
     - [ ] 有道
     - [ ] deepl
@@ -111,6 +111,11 @@ VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英
 
 配置信息：
 ![ExtensionsVscodeSamgeTranslateConfiguration](./screenshot/ExtensionsVscodeSamgeTranslateConfiguration.png)
+
+
+### Dev
+
+[点击这里查看插件开发相关内容>>](./README-dev.md)
 
 
 ### 技术交流
