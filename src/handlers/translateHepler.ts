@@ -8,6 +8,7 @@ import * as translateAlibaba from './translationEngines/translateAlibaba';
 import * as translateTencent from './translationEngines/translateTencent';
 import * as translateVolcano from './translationEngines/translateVolcano';
 import * as translateYoudao from './translationEngines/translateYoudao';
+import * as translateDeepL from './translationEngines/translateDeepL';
 
 
 // translation engine type
@@ -17,6 +18,7 @@ export enum ProviderNameEnum {
     Alibaba = "alibaba",
     Volcano = "volcano",
     Youdao = "youdao",
+    DeepL = "deepl",
 }
 
 
@@ -27,7 +29,14 @@ const translationStrategies = {
     [ProviderNameEnum.Alibaba.toLowerCase()]: translateAlibaba.translateText,
     [ProviderNameEnum.Volcano.toLowerCase()]: translateVolcano.translateText,
     [ProviderNameEnum.Youdao.toLowerCase()]: translateYoudao.translateText,
+    [ProviderNameEnum.DeepL.toLowerCase()]: translateDeepL.translateText,
 };
+
+
+// if it is a single key，providerAppId and providerAppSecret can only have one value that is not empty
+function isSingleKey(providerName: string): boolean {
+	return ProviderNameEnum.DeepL.toLowerCase() === providerName;
+}
 
 
 // a model for storing translation engines app id and app secret
@@ -170,12 +179,22 @@ export async function translateText(
 	if (!providerName) {
 		return tipUtil.getConfigTip("providerName");
 	}
-	if (!providerAppId) {
-		return tipUtil.getConfigTip("providerAppId");
+
+	if (isSingleKey(providerName)) {
+		if (!providerAppId && !providerAppSecret) {
+			return tipUtil.getConfigTip("providerAppId or providerAppSecret");
+		}
+		providerAppId = providerAppId ?? "";
+		providerAppSecret = providerAppSecret ?? "";
+	} else {
+		if (!providerAppId) {
+			return tipUtil.getConfigTip("providerAppId");
+		}
+		if (!providerAppSecret) {
+			return tipUtil.getConfigTip("providerAppSecret");
+		}
 	}
-	if (!providerAppSecret) {
-		return tipUtil.getConfigTip("providerAppSecret");
-	}
+	
 	if (!languageFrom) {
 		languageFrom = "en";
 	}
