@@ -7,6 +7,7 @@ import * as translateBaidu from './translationEngines/translateBaidu';
 import * as translateAlibaba from './translationEngines/translateAlibaba';
 import * as translateTencent from './translationEngines/translateTencent';
 import * as translateVolcano from './translationEngines/translateVolcano';
+import * as translateYoudao from './translationEngines/translateYoudao';
 
 
 // translation engine type
@@ -15,6 +16,7 @@ export enum ProviderNameEnum {
     Tencent = "tencent",
     Alibaba = "alibaba",
     Volcano = "volcano",
+    Youdao = "youdao",
 }
 
 
@@ -24,6 +26,7 @@ const translationStrategies = {
     [ProviderNameEnum.Tencent.toLowerCase()]: translateTencent.translateText,
     [ProviderNameEnum.Alibaba.toLowerCase()]: translateAlibaba.translateText,
     [ProviderNameEnum.Volcano.toLowerCase()]: translateVolcano.translateText,
+    [ProviderNameEnum.Youdao.toLowerCase()]: translateYoudao.translateText,
 };
 
 

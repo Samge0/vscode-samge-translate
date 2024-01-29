@@ -111,7 +111,8 @@
                         "baidu",
                         "alibaba",
                         "tencent",
-                        "volcano"
+                        "volcano",
+                        "youdao"
                     ],
                     "description": "Translate Provider - 翻译引擎提供者，Default：baidu\n【Note】after switching the translation engine, click on other blank spaces first before, VsCode will refresh the ui\n【注意】切换翻译引擎后，先点击其他空白处，VsCode才会刷新UI"
                 },
