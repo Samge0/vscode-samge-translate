@@ -1,18 +1,31 @@
-import * as tip from './tip';
 import * as vscode from 'vscode';
-import * as camelCase from './camelCase';
-import * as cryptoUtil from './cryptoUtil';
 import * as decoration from './decoration';
-import * as translateBaidu from './translateBaidu';
-import * as translateAlibaba from './translateAlibaba';
-import * as translateTencent from './translateTencent';
+import * as tipUtil from './utils/tipUtil';
+import * as cryptoUtil from './utils/cryptoUtil';
+import * as camelCaseUtil from './utils/camelCaseUtil';
+import * as translateBaidu from './translationEngines/translateBaidu';
+import * as translateAlibaba from './translationEngines/translateAlibaba';
+import * as translateTencent from './translationEngines/translateTencent';
+import * as translateVolcano from './translationEngines/translateVolcano';
+
 
 // translation engine type
 export enum ProviderNameEnum {
     Baidu = "baidu",
     Tencent = "tencent",
     Alibaba = "alibaba",
+    Volcano = "volcano",
 }
+
+
+// translation engine invocation strategy
+const translationStrategies = {
+    [ProviderNameEnum.Baidu.toLowerCase()]: translateBaidu.translateText,
+    [ProviderNameEnum.Tencent.toLowerCase()]: translateTencent.translateText,
+    [ProviderNameEnum.Alibaba.toLowerCase()]: translateAlibaba.translateText,
+    [ProviderNameEnum.Volcano.toLowerCase()]: translateVolcano.translateText,
+};
+
 
 // a model for storing translation engines app id and app secret
 interface ProviderData {
@@ -20,8 +33,10 @@ interface ProviderData {
     providerAppSecret: string;
 }
 
+
 // the last editor for the operation
 let lastEditor: vscode.TextEditor | undefined = undefined;
+
 
 export let enableThis: boolean = true; // 是否启用插件，Default：true
 let enableHover: boolean = false; // 是否在鼠标悬浮时自动翻译，Default：false
@@ -73,6 +88,8 @@ export function updateConfig(
 	
 				// update cache values to vscode configuration
 				updateConfigurations(properties, providerAppId, providerAppSecret);
+			} else {
+				updateConfigurations(properties, "", "");
 			}
 		}
 	}
@@ -86,11 +103,11 @@ function updateConfigurations(
 	providerAppSecret: string,
 ) {
     try {
-        properties.update('samge.translate.providerAppId', providerAppId, vscode.ConfigurationTarget.Global);
-        console.log(`【providerAppId】 Configuration updated successfully => ${providerAppId}`);
+		properties.update('samge.translate.providerAppId', providerAppId, vscode.ConfigurationTarget.Global);
+		console.log(`【providerAppId】 Configuration updated successfully => ${providerAppId}`);
 
-        properties.update('samge.translate.providerAppSecret', providerAppSecret, vscode.ConfigurationTarget.Global);
-        console.log(`【providerAppSecret】 Configuration updated successfully => ${providerAppSecret}`);
+		properties.update('samge.translate.providerAppSecret', providerAppSecret, vscode.ConfigurationTarget.Global);
+		console.log(`【providerAppSecret】 Configuration updated successfully => ${providerAppSecret}`);
     } catch (error) {
         console.error('Error updating configuration:', error);
     }
@@ -134,14 +151,6 @@ export function getProviderDataCache(
 }
 
 
-// translation engine invocation strategy
-const translationStrategies = {
-    [ProviderNameEnum.Baidu.toLowerCase()]: translateBaidu.translateText,
-    [ProviderNameEnum.Tencent.toLowerCase()]: translateTencent.translateText,
-    [ProviderNameEnum.Alibaba.toLowerCase()]: translateAlibaba.translateText
-};
-
-
 // perform translation operations
 export async function translateText(
 	text: string | undefined, 
@@ -156,13 +165,13 @@ export async function translateText(
 		return "";
 	}
 	if (!providerName) {
-		return tip.getConfigTip("providerName");
+		return tipUtil.getConfigTip("providerName");
 	}
 	if (!providerAppId) {
-		return tip.getConfigTip("providerAppId");
+		return tipUtil.getConfigTip("providerAppId");
 	}
 	if (!providerAppSecret) {
-		return tip.getConfigTip("providerAppSecret");
+		return tipUtil.getConfigTip("providerAppSecret");
 	}
 	if (!languageFrom) {
 		languageFrom = "en";
@@ -175,7 +184,7 @@ export async function translateText(
 	}
 
 	// preprocessing text
-	text = tip.preprocessText(text);
+	text = tipUtil.preprocessText(text);
 	if (text.length > limitSingleMaximum) {
 		// truncate text to ensure its length does not exceed limitSingleMaximum
 		text = text.substring(0, limitSingleMaximum);
@@ -221,14 +230,14 @@ export function handlerResultDisplay(
 				vscode.ViewColumn.One, // display in which part of the editor
 				{}
 			);
-			panel.webview.html = tip.genhtmlShowInfo(text, translatedResult);
+			panel.webview.html = tipUtil.genhtmlShowInfo(text, translatedResult);
 		}
 	});
 
 	// display processing results in the OUTPUT panel
 	if (enableOutput) {
 		const outputChannel = vscode.window.createOutputChannel("Processing-Results");
-		outputChannel.appendLine(tip.genCommonShowInfo(text, translatedResult));
+		outputChannel.appendLine(tipUtil.genCommonShowInfo(text, translatedResult));
 		outputChannel.show(true);
 	}
 
@@ -307,16 +316,16 @@ export function handleZh2var() {
 		translateText(text, providerName, providerAppId, providerAppSecret, "zh", "en", limitSingleMaximum).then(translatedResult => {
 			// select conversion type
 			let options = [
-				`${camelCase.camelCase(translatedResult)} | 驼峰(小) camelCase`,
-				`${camelCase.capitalCase(translatedResult)} | 分词(大) Capital Case`,
-				`${camelCase.constantCase(translatedResult)} | 常量 CONSTANT_CASE`,
-				`${camelCase.dotCase(translatedResult)} | 对象属性 dot case`,
-				`${camelCase.headerCase(translatedResult)} | 中划线(大) Header-Case`,
-				`${camelCase.noCase(translatedResult)} | 分词(小) no case`,
-				`${camelCase.paramCase(translatedResult)} | 中划线(小) param-case`,
-				`${camelCase.pascalCase(translatedResult)} | 驼峰(大) PascalCase`,
-				`${camelCase.pathCase(translatedResult)} | 文件路径 path/case`,
-				`${camelCase.snakeCase(translatedResult)} | 下划线 snake_case`
+				`${camelCaseUtil.camelCase(translatedResult)} | 驼峰(小) camelCaseUtil`,
+				`${camelCaseUtil.capitalCase(translatedResult)} | 分词(大) Capital Case`,
+				`${camelCaseUtil.constantCase(translatedResult)} | 常量 CONSTANT_CASE`,
+				`${camelCaseUtil.dotCase(translatedResult)} | 对象属性 dot case`,
+				`${camelCaseUtil.headerCase(translatedResult)} | 中划线(大) Header-Case`,
+				`${camelCaseUtil.noCase(translatedResult)} | 分词(小) no case`,
+				`${camelCaseUtil.paramCase(translatedResult)} | 中划线(小) param-case`,
+				`${camelCaseUtil.pascalCase(translatedResult)} | 驼峰(大) PascalCase`,
+				`${camelCaseUtil.pathCase(translatedResult)} | 文件路径 path/case`,
+				`${camelCaseUtil.snakeCase(translatedResult)} | 下划线 snake_case`
 			];
 			vscode.window.showQuickPick(options).then(selection => {
 				if (!selection) {
