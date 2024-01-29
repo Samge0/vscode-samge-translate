@@ -2,7 +2,7 @@
     "name": "vscode-samge-translate",
     "displayName": "Vscode Samge Translate 翻译助手",
     "description": "Quickly translate text right in your code 🚀 支持多种翻译命令（英译中、中译英、中文转多规则命名变量等），支持多种结果展示方式，支持配置百度翻译引擎。",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "engines": {
         "vscode": "^1.85.0"
     },

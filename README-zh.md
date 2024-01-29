@@ -67,8 +67,8 @@ VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英
     - [x] 百度 (baidu)
     - [x] 阿里 (alibaba)
     - [x] 腾讯 (tencent)
-    - [ ] 火山
-    - [ ] 有道
+    - [x] 火山 (volcano)
+    - [x] 有道 (youdao)
     - [ ] deepl
 
 - 当前支持的翻译语言有哪些？

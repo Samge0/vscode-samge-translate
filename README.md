@@ -66,8 +66,8 @@ Follow these steps to modify keyboard shortcuts and settings:
     - [x] Baidu (baidu)
     - [x] Alibaba (alibaba)
     - [x] Tencent (tencent)
-    - [ ] Volcano Engine
-    - [ ] Youdao
+    - [x] Volcano Engine (volcano)
+    - [x] Youdao (youdao)
     - [ ] DeepL
 
 - What translation languages are currently supported?

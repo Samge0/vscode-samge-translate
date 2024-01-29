@@ -1,5 +1,10 @@
 # Change Log
 
+### 0.0.5 - 2024-01-29
+
+- Add volcano translate engine support
+- Add youdao translate engine support
+
 ### 0.0.4 - 2024-01-28
 
 - Add alibaba translate engine support

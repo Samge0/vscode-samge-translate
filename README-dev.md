@@ -24,9 +24,9 @@ yarn install
 }
 ```
 
-- 运行跟调试
+- running and debugging
 
-- 打包并发布
+- package and publish
 ```shell
 vsce login yourPluginName
 
