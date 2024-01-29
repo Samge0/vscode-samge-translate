@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.0.6 - 2024-01-29
+
+- Add deepl translate engine support
+
 ### 0.0.5 - 2024-01-29
 
 - Add volcano translate engine support

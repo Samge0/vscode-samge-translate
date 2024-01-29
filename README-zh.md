@@ -4,6 +4,8 @@
 
 VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英文到中文`、从`中文到英文`的翻译功能，以及`中文转变量名`功能支持多规则变量名（`camelCase、capitalCase、constantCase、dotCase、headerCase、noCase、paramCase、pascalCase、pathCase、snakeCase`）转换操作。使用百度/其他`翻译引擎API`来实现准确的翻译结果。<br>
 
+当前支持的翻译引擎包括：`百度`、`阿里`、`腾讯`、`火山`、`有道`、`DeepL`。<br>
+
 这个GIF展示本插件的翻译功能交互，翻译结果可在选中文本后面展示、OUTPUT面板展示、右下角提示框展示、鼠标放在文本上悬浮展示，这些展示方式可在配置中开启或关闭。
 ![SamgeTranslateDisplay](./screenshot/SamgeTranslateDisplay.gif)
 
@@ -55,7 +57,7 @@ VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英
 
 ## 常见问题
 
-- 如何获取appId和appSecret？
+- [如何获取appId和appSecret]()？
     - [百度](https://api.fanyi.baidu.com/api/trans/product/prodinfo)：5万免费字符/月 (个人认证后可切换高级版：100w免费字符/月)
     - [阿里](https://www.aliyun.com/product/ai/base_alimt?source=5176.11533457&userCode=wsnup3vv)：：100万免费字符/月
     - [腾讯](https://cloud.tencent.com/document/product/551/35017?fromSource=gwzcw.1293314.1293314.1293314&cps_key=963fb04b6aae26f0014088af393dccf1)：：500万免费字符/月
@@ -69,7 +71,7 @@ VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英
     - [x] 腾讯 (tencent)
     - [x] 火山 (volcano)
     - [x] 有道 (youdao)
-    - [ ] deepl
+    - [x] DeepL (deepl)
 
 - 当前支持的翻译语言有哪些？
     - [x] en

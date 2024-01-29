@@ -4,6 +4,8 @@
 
 VSCode Samge Translate is a translation plugin for VSCode that offers translation services from English to Chinese and vice versa. It also provides a feature for converting Chinese text into variable names, supporting multiple naming conventions such as `camelCase`, `capitalCase`, `constantCase`, `dotCase`, `headerCase`, `noCase`, `paramCase`, `pascalCase`, `pathCase`, and `snakeCase`. This plugin leverages APIs from Baidu and other translation engines to deliver accurate translations.<br>
 
+The supported translation engines include: `Baidu`, `Alibaba`, `Tencent`, `Volcano`, `Youdao`, `DeepL`.<br>
+
 this gif displays the translation function interaction of this plugin the translation results can be displayed after the selected text in the OUTPUT panel in the bottom right corner prompt box or hovering over the text these display methods can be turned on or off in the configuration
 ![SamgeTranslateDisplay](./screenshot/SamgeTranslateDisplay.gif)
 
@@ -68,7 +70,7 @@ Follow these steps to modify keyboard shortcuts and settings:
     - [x] Tencent (tencent)
     - [x] Volcano Engine (volcano)
     - [x] Youdao (youdao)
-    - [ ] DeepL
+    - [x] DeepL (deepl)
 
 - What translation languages are currently supported?
     - [x] English (en)
