@@ -114,6 +114,11 @@ VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英
 配置信息：
 ![ExtensionsVscodeSamgeTranslateConfiguration](./screenshot/ExtensionsVscodeSamgeTranslateConfiguration.png)
 
+增加光标左侧连续汉字转英文功能（默认没有开启，需要到插件配置中勾选并启用该功能）:
+![KeyboardShortcutsAndZh2varNew](./screenshot/KeyboardShortcutsAndZh2varNew.gif)
+
+![KeyboardShortcutsAndZh2varNew](./screenshot/KeyboardShortcutsAndZh2varNew.png)
+
 
 ### Dev
 

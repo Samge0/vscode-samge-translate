@@ -2,7 +2,7 @@
     "name": "vscode-samge-translate",
     "displayName": "Vscode Samge Translate 翻译助手",
     "description": "Quickly translate text right in your code 🚀 支持多种翻译命令（英译中、中译英、中文转多规则命名变量等），支持多种结果展示方式，支持配置百度翻译引擎。",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "engines": {
         "vscode": "^1.85.0"
     },
@@ -34,6 +34,46 @@
             {
                 "command": "samge.translate.zh2var",
                 "title": "Samge Translate：中文转变量名-zh2var"
+            },
+            {
+                "command": "samge.translate.zh2varCamelCase",
+                "title": "Samge Translate：中文转变量名-zh2var-camelCase-驼峰(小) camelCaseUtil"
+            },
+            {
+                "command": "samge.translate.zh2varCapitalCase",
+                "title": "Samge Translate：中文转变量名-zh2var-capitalCase-分词(大) Capital Case"
+            },
+            {
+                "command": "samge.translate.zh2varConstantCase",
+                "title": "Samge Translate：中文转变量名-zh2var-constantCase-常量 CONSTANT_CASE"
+            },
+            {
+                "command": "samge.translate.zh2varDotCase",
+                "title": "Samge Translate：中文转变量名-zh2var-对象属性 dot case"
+            },
+            {
+                "command": "samge.translate.zh2varHeaderCase",
+                "title": "Samge Translate：中文转变量名-zh2var-中划线(大) Header-Case"
+            },
+            {
+                "command": "samge.translate.zh2varNoCase",
+                "title": "Samge Translate：中文转变量名-zh2var-分词(小) no case"
+            },
+            {
+                "command": "samge.translate.zh2varParamCase",
+                "title": "Samge Translate：中文转变量名-zh2var-中划线(小) param-case"
+            },
+            {
+                "command": "samge.translate.zh2varPascalCase",
+                "title": "Samge Translate：中文转变量名-zh2var-驼峰(大) PascalCase"
+            },
+            {
+                "command": "samge.translate.zh2varPathCase",
+                "title": "Samge Translate：中文转变量名-zh2var-文件路径 path/case"
+            },
+            {
+                "command": "samge.translate.zh2varSnakeCase",
+                "title": "Samge Translate：中文转变量名-zh2var-下划线 snake_case"
             }
         ],
         "keybindings": [
@@ -129,6 +169,21 @@
                     "type": "integer",
                     "default": 1000,
                     "description": "Maximum Single Translation Character - 单次翻译最大字符限制，超过自动截断，Default：1000"
+                },
+                "samge.translate.shortZh2var.enable": {
+                    "type": "boolean",
+                    "default": false,
+                    "markdownDescription": "Enable short phrase quick translation - 是否开启：**短词快捷翻译**\n\n若开启此选项，可按快捷键将`光标左侧连续中文词组`转为指定格式的英文，Default：false"
+                },
+                "samge.translate.shortZh2var.enableLettersAndNumbers": {
+                    "type": "boolean",
+                    "default": true,
+                    "markdownDescription": "Short phrase quick translation allow letters and numbers\n\n**短词快捷翻译** - 光标左侧词组提取是否允许连续字母/数字，Default：true\n\ntrue=`中文+字母+数字`连续词组\n\nfalse=仅`中文`连续词组"
+                },
+                "samge.translate.shortZh2var.limitSingleMaximum": {
+                    "type": "integer",
+                    "default": 20,
+                    "markdownDescription": "Short Phrase Quick Translate Maximum Characters Per Translation\n\n**短词快捷翻译** - 单次翻译最大字符限制，超过则提示错误信息，Default：20\n\n（这里的字母跟数字不参与字符个数计算）"
                 }
             }
         }

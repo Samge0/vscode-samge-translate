@@ -61,6 +61,10 @@ let providerAppId: string = ""; // 翻译引擎的appId
 let providerAppSecret: string = ""; // 翻译引擎的appSecret
 let limitSingleMaximum: number = 1000; // 单次翻译最大字符限制，超过自动截断，Default：1000
 
+let shortZh2varEnable: boolean = false; // 是否开启：短词快捷翻译 - 若开启此选项，可按快捷键将光标左侧连续中文词组转为指定格式的英文，Default：false
+let shortZh2varEnableLettersAndNumbers: boolean = true; // 短词快捷翻译 - 光标左侧词组提取是否允许字母跟数字，Default：true | true=`中文+字母+数字`连续词组 false=仅`中文`连续词组
+let shortZh2varLimitSingleMaximum: number = 20; // 短词快捷翻译 - 单次翻译最大字符限制，超过则提示错误信息，Default：20（这里的字母跟数字不参与字符个数计算）
+
 
 // update configuration
 export function updateConfig(
@@ -78,6 +82,9 @@ export function updateConfig(
 	providerAppId = properties.get<string>('samge.translate.providerAppId', ''); // 翻译引擎的appId
 	providerAppSecret = properties.get<string>('samge.translate.providerAppSecret', ''); // 翻译引擎的appSecret
 	limitSingleMaximum = properties.get<number>('samge.translate.limitSingleMaximum', 1000); // 单次翻译最大字符限制，超过自动截断
+	shortZh2varEnable = properties.get<boolean>('samge.translate.shortZh2var.enable', false); // 是否开启：短词快捷翻译 - 若开启此选项，可按快捷键将光标左侧连续中文词组转为指定格式的英文，Default：false
+	shortZh2varEnableLettersAndNumbers = properties.get<boolean>('samge.translate.shortZh2var.enableLettersAndNumbers', true); // 短词快捷翻译 - 光标左侧词组提取是否允许字母跟数字，Default：true | true=`中文+字母+数字`连续词组 false=仅`中文`连续词组
+	shortZh2varLimitSingleMaximum = properties.get<number>('samge.translate.shortZh2var.limitSingleMaximum', 20); // 短词快捷翻译 - 单次翻译最大字符限制，超过则提示错误信息，Default：20（这里的字母跟数字不参与字符个数计算）
 
 	// parse ProviderData cache
 	if (event) {
@@ -320,6 +327,38 @@ export function handleZh2en(enableReplace: boolean) {
 }
 
 
+// continuous chinese characters in front of the cursor
+function getContinuousChineseLeftOfCursor(editor: vscode.TextEditor | undefined): string {
+	if (!editor) {
+		return "";
+	}
+
+	const position = editor.selection.active;
+    const lineText = editor.document.lineAt(position.line).text;
+    const textBeforeCursor = lineText.substring(0, position.character);
+
+    const match = shortZh2varEnableLettersAndNumbers ? textBeforeCursor.match(/[\u4e00-\u9fa5a-zA-Z0-9]+$/) : textBeforeCursor.match(/[\u4e00-\u9fa5]+$/);
+	if (!match || match[0].length <= 0) {
+		vscode.window.showErrorMessage(`No valid Chinese text found to the left of the cursor`);
+		return "";
+	}
+	
+	const matchText = match[0];
+
+	// Short Phrase Quick Translate => ignoring the length of letters and numbers
+	const nonChineseCharacters = matchText.match(/[a-zA-Z0-9]/g) || [];
+	const nonChineseLength = nonChineseCharacters.length;
+
+	const chineseLength = matchText.length - nonChineseLength;
+	if (chineseLength > shortZh2varLimitSingleMaximum) {
+		vscode.window.showErrorMessage(`text length exceeds limit：chineseLength(${chineseLength}) > limit(${shortZh2varLimitSingleMaximum}).`);
+		return "";
+	}
+
+	return matchText;
+}
+
+
 // chinese transformation variable name
 export function handleZh2var() {
 	
@@ -332,10 +371,21 @@ export function handleZh2var() {
 	console.log(`trigger zh2var => ${lastEditor}`);
 	if (lastEditor) {
 		const selection = lastEditor.selection;
-		const text = lastEditor.document.getText(selection);
+		let text = lastEditor.document.getText(selection);
+		let isSelectionText = true;
+	
+		if (!text && shortZh2varEnable) {
+			isSelectionText = false;
+			text = getContinuousChineseLeftOfCursor(lastEditor);
+		}
+
+		if (!text) {
+			return;
+		}
 
 		// calling translation functions
 		translateText(text, providerName, providerAppId, providerAppSecret, "zh", "en", limitSingleMaximum).then(translatedResult => {
+			translatedResult = translatedResult.replace(".", "");
 			// select conversion type
 			let options = [
 				`${camelCaseUtil.camelCase(translatedResult)} | 驼峰(小) camelCaseUtil`,
@@ -355,10 +405,88 @@ export function handleZh2var() {
 				}
 				const selectionValue = selection.split(" | ")[0];
 				console.log(`you have chosen: ${text} => ${selectionValue}`);
-				replaceEditorSelectedText(lastEditor, text, selectionValue);
+				if (isSelectionText) {
+					replaceEditorSelectedText(lastEditor, text, selectionValue);
+				} else {
+					replaceTextLeftOfCursor(lastEditor, text, selectionValue);
+				}
 			});
 		});
 	}
+}
+
+
+// chinese transformation variable name - by camelCaseType
+export const handleZh2varCamelCase = () => handleZh2varWithCamelCaseType(camelCaseUtil.CamelCaseEnum.CamelCase);
+export const handleZh2varCapitalCase = () => handleZh2varWithCamelCaseType(camelCaseUtil.CamelCaseEnum.CapitalCase);
+export const handleZh2varConstantCase = () => handleZh2varWithCamelCaseType(camelCaseUtil.CamelCaseEnum.ConstantCase);
+export const handleZh2varDotCase = () => handleZh2varWithCamelCaseType(camelCaseUtil.CamelCaseEnum.DotCase);
+export const handleZh2varHeaderCase = () => handleZh2varWithCamelCaseType(camelCaseUtil.CamelCaseEnum.HeaderCase);
+export const handleZh2varNoCase = () => handleZh2varWithCamelCaseType(camelCaseUtil.CamelCaseEnum.NoCase);
+export const handleZh2varParamCase = () => handleZh2varWithCamelCaseType(camelCaseUtil.CamelCaseEnum.ParamCase);
+export const handleZh2varPascalCase = () => handleZh2varWithCamelCaseType(camelCaseUtil.CamelCaseEnum.PascalCase);
+export const handleZh2varPathCase = () => handleZh2varWithCamelCaseType(camelCaseUtil.CamelCaseEnum.PathCase);
+export const handleZh2varSnakeCase = () => handleZh2varWithCamelCaseType(camelCaseUtil.CamelCaseEnum.SnakeCase);
+
+
+// chinese transformation variable name - by camelCaseType
+export function handleZh2varWithCamelCaseType(camelCaseType: string) {
+	
+	if (!enableThis) {
+		console.log(`enableThis is false，do not execute function handleZh2varWithCamelCaseType - ${camelCaseType}`);
+		return;
+	}
+
+	lastEditor = vscode.window.activeTextEditor;
+	console.log(`trigger handleZh2varWithCamelCaseType ${camelCaseType} => ${lastEditor}`);
+	if (!lastEditor) {
+		return;
+	}
+
+	// dealing with manually selected text
+	const selection = lastEditor.selection;
+	let text = lastEditor.document.getText(selection);
+	let isSelectionText = true;
+
+	if (!text && shortZh2varEnable) {
+		isSelectionText = false;
+		text = getContinuousChineseLeftOfCursor(lastEditor);
+	}
+	
+	if (!text) {
+		return;
+	}
+
+	// calling translation functions
+	translateText(text, providerName, providerAppId, providerAppSecret, "zh", "en", limitSingleMaximum).then(translatedResult => {
+		translatedResult = translatedResult.replace(".", "");
+		const camelCaseResult = camelCaseUtil.getResultWithType(camelCaseType, translatedResult);
+		if (isSelectionText) {
+			replaceEditorSelectedText(lastEditor, text, camelCaseResult);
+		} else {
+			replaceTextLeftOfCursor(lastEditor, text, camelCaseResult);
+		}
+	});
+}
+
+
+// replace the chinese text to the left of the cursor
+function replaceTextLeftOfCursor(
+	editor: vscode.TextEditor | undefined, 
+	oldText: string, 
+	replaceText: string
+) {
+    if (!editor) {
+       return;
+    }
+	
+	const position = editor.selection.active;
+	const start = new vscode.Position(position.line, position.character - oldText.length);
+	const end = position;
+	const range = new vscode.Range(start, end);
+	editor.edit(editBuilder => {
+		editBuilder.replace(range, replaceText);
+	});
 }
 
 

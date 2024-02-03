@@ -112,6 +112,12 @@ Configuration information gif:
 Configuration information:
 ![ExtensionsVscodeSamgeTranslateConfiguration](./screenshot/ExtensionsVscodeSamgeTranslateConfiguration.png)
 
+Add the feature to convert consecutive Chinese characters to English on the left side of the cursor (This feature is not enabled by default; it needs to be activated by selecting the option within the plugin settings.):
+![KeyboardShortcutsAndZh2varNew](./screenshot/KeyboardShortcutsAndZh2varNew.gif)
+
+![KeyboardShortcutsAndZh2varNew](./screenshot/KeyboardShortcutsAndZh2varNew.png)
+
+
 ### Dev
 
 [click here to view plugin development related content>>](./README-dev.md)

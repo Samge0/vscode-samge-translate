@@ -1,5 +1,10 @@
 # Change Log
 
+### 0.0.7 - 2024-02-03
+
+- Add the feature to convert consecutive Chinese characters to English on the left side of the cursor(This feature is not enabled by default; it needs to be activated by selecting the option within the plugin settings.).
+- Add keyboard shortcut triggers for all "zh2var" methods, allowing for usage upon configuration of custom shortcuts.
+
 ### 0.0.6 - 2024-01-29
 
 - Add deepl translate engine support
