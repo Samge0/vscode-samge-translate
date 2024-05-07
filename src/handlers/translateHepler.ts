@@ -217,6 +217,19 @@ export async function translateText(
 	if (text.length > limitSingleMaximum) {
 		// truncate text to ensure its length does not exceed limitSingleMaximum
 		text = text.substring(0, limitSingleMaximum);
+		// prompt when exceeding the length
+		const message = `The text length exceeds the limit of ${limitSingleMaximum}, the text has been truncated, if you need to translate long text please modify the configuration yourself.\n（文本长度超过${limitSingleMaximum}的配置限制，文本已被截断。如果需要翻译长文本，请自行修改配置）`;
+		vscode.window.showInformationMessage(message, "More").then(selection => {
+			if (selection === "More") {
+				const panel = vscode.window.createWebviewPanel(
+					'message', 
+					'Warning Tip',
+					vscode.ViewColumn.One,
+					{}
+				);
+				panel.webview.html = message;
+			}
+		});
 	}
 	console.log(`preprocessed text to be translated：${text}`);
 
@@ -236,7 +249,8 @@ export function handlerResultDisplay(
 	text: string, 
 	translatedResult: string,
 	enableOutput: boolean,
-	enableRightDisplay: boolean
+	enableRightDisplay: boolean,
+	enableReplace: boolean
 ) {
 	// process translated text here
 	console.log(`handlerResultDisplay：${text} => ${translatedResult}`);
@@ -271,8 +285,81 @@ export function handlerResultDisplay(
 	}
 
 	// display the processing results directly to the right of the selected text
-	if (enableRightDisplay) {
+	if (enableRightDisplay && !enableReplace) {
 		decoration.addDecoration(editor, translatedResult);
+	}
+
+	// optional pop up options, allow users to directly replace selected text or append translations, this feature is only valid for selected text
+	if (editor && !enableReplace) {
+		const hasSelection = editor.selections.some(selection => !selection.isEmpty);
+		if (!hasSelection) {
+			return;
+		}
+
+		// allow users to directly replace selected text or append translations
+		let options = [
+			`Replace | 直接替换选中文本`,
+			`Append & Select | 将译文追加到选中文本末尾并选中译文`
+		];
+		vscode.window.showQuickPick(options).then(selection => {
+			if (!selection) {
+				return;
+			}
+			const selectionValue = selection.split(" | ")[0];
+			console.log(`you have chosen: ${text} => ${selectionValue}`);
+		
+			if ("Replace" === selectionValue) {
+				replaceEditorSelectedTextOnly(editor, translatedResult);
+			} else {
+				appendTranslationAndSelect(editor, text, translatedResult);
+			}
+			
+		});
+	}
+
+}
+
+
+/**
+ * Function to append translated text and select it in the editor.
+ *
+ * @param {vscode.TextEditor | undefined} editor - The editor to work on.
+ * @param {string} text - The original text.
+ * @param {string} translatedResult - The translated text to append.
+ */
+function appendTranslationAndSelect(
+	editor: vscode.TextEditor | undefined, 
+	text: string, 
+	translatedResult: string
+) {
+
+	// replace
+	if (editor) {
+        const selection = editor.selection;
+        const newText = text + translatedResult;
+
+        // use the editor's edit function to replace the selected text with the original + translation, and select the translation section
+        editor.edit((editBuilder) => {
+            editBuilder.replace(selection, newText);
+        }).then(() => {
+			const splitList = translatedResult.split('\n');
+			const start = new vscode.Position(selection.end.line, selection.end.character);
+			const endLine = start.line + splitList.length - 1;
+			let endCharacter = start.character;
+
+			// calculate end character position
+			if (endLine > start.line) {
+				// in the case of multiple lines of text
+				endCharacter = translatedResult.length - translatedResult.lastIndexOf('\n', translatedResult.length - 1) - 1;
+			} else {
+				// only one line of text
+				endCharacter = start.character + translatedResult.length;
+			}
+
+			const translatedSelection = new vscode.Selection(start.line, start.character, endLine, endCharacter);
+            editor.selection = translatedSelection;
+        });
+
 	}
 }
 
@@ -292,10 +379,10 @@ export function handleEn2zh(enableReplace: boolean) {
 
 		// calling translation functions
 		translateText(text, providerName, providerAppId, providerAppSecret, languageFrom, languageTo, limitSingleMaximum).then(translatedResult => {
-			handlerResultDisplay(lastEditor, text, translatedResult, enableOutput, enableRightDisplay && !enableReplace);
+			handlerResultDisplay(lastEditor, text, translatedResult, enableOutput, enableRightDisplay, enableReplace);
 
 			if (enableReplace) {
-				replaceEditorSelectedText(lastEditor, text, translatedResult);
+				replaceEditorSelectedTextWithDisplay(lastEditor, text, translatedResult);
 			}
 		});
 	}
@@ -317,10 +404,10 @@ export function handleZh2en(enableReplace: boolean) {
 		
 		// calling translation functions
 		translateText(text, providerName, providerAppId, providerAppSecret, "zh", "en", limitSingleMaximum).then(translatedResult => {
-			handlerResultDisplay(lastEditor, text, translatedResult, enableOutput, enableRightDisplay && !enableReplace);
+			handlerResultDisplay(lastEditor, text, translatedResult, enableOutput, enableRightDisplay, enableReplace);
 
 			if (enableReplace) {
-				replaceEditorSelectedText(lastEditor, text, translatedResult);
+				replaceEditorSelectedTextWithDisplay(lastEditor, text, translatedResult);
 			}
 		});
 	}
@@ -406,7 +493,7 @@ export function handleZh2var() {
 				const selectionValue = selection.split(" | ")[0];
 				console.log(`you have chosen: ${text} => ${selectionValue}`);
 				if (isSelectionText) {
-					replaceEditorSelectedText(lastEditor, text, selectionValue);
+					replaceEditorSelectedTextWithDisplay(lastEditor, text, selectionValue);
 				} else {
 					replaceTextLeftOfCursor(lastEditor, text, selectionValue);
 				}
@@ -462,7 +549,7 @@ export function handleZh2varWithCamelCaseType(camelCaseType: string) {
 		translatedResult = translatedResult.replace(".", "");
 		const camelCaseResult = camelCaseUtil.getResultWithType(camelCaseType, translatedResult);
 		if (isSelectionText) {
-			replaceEditorSelectedText(lastEditor, text, camelCaseResult);
+			replaceEditorSelectedTextWithDisplay(lastEditor, text, camelCaseResult);
 		} else {
 			replaceTextLeftOfCursor(lastEditor, text, camelCaseResult);
 		}
@@ -490,8 +577,8 @@ function replaceTextLeftOfCursor(
 }
 
 
-// replace editor selected text
-function replaceEditorSelectedText(
+// replace editor selected text, and display
+function replaceEditorSelectedTextWithDisplay(
 	editor: vscode.TextEditor | undefined, 
 	oldText: string, 
 	replaceText: string
@@ -502,7 +589,21 @@ function replaceEditorSelectedText(
 			editBuilder.replace(selectionRange, replaceText);
 		}).then(success => {
 			const resultMsg = success ? `successfully replaced text: ${oldText} => ${replaceText}` : "replacing text failed";
-			handlerResultDisplay(lastEditor, oldText, resultMsg, enableOutput, false);
+			const enableRightDisplay = false, enableReplace = true;
+			handlerResultDisplay(lastEditor, oldText, resultMsg, enableOutput, enableRightDisplay, enableReplace);
+		});
+	}
+}
+
+
+// replace editor selected text only
+function replaceEditorSelectedTextOnly(
+	editor: vscode.TextEditor | undefined, 
+	replaceText: string
+) {
+	if (editor) {
+		editor.edit((editBuilder) => {
+			editBuilder.replace(editor.selection, replaceText);
 		});
 	}
 }

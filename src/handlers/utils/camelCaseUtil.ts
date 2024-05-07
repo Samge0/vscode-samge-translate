@@ -40,7 +40,7 @@ export function getResultWithType(camelCaseType: string, value: string): string 
 export function camelCase(str: string): string {
     return str.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => {
         return index === 0 ? word.toLowerCase() : word.toUpperCase();
-    }).replace(/\s+/g, '');
+    }).replace(/\s+/g, "");
 }
 
 				
@@ -86,7 +86,7 @@ export function paramCase(str: string): string {
 export function pascalCase(str: string): string {
     return str.replace(/\w\S*/g, (word) => {
         return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
-    });
+    }).replace(/\s+/g, "");
 }
 
 

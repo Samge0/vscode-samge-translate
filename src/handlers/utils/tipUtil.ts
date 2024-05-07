@@ -1,15 +1,16 @@
 import * as dateUtil from './dateUtil';
 
+// log delimiter
+const TAG_LOG_DELIMITER = "==========================================================================================================\n";
 
-// replace dots horizontal lines underscores and camel humps with spaces some translations do not support line breaks and need to handle line breaks
-// 替换点、横线、下划线以及驼峰命名为空格，有的翻译不支持传换行文本，需要处理换行
+// replace dots horizontal lines underscores and camel humps with spaces, because the sticky english translation engine may not be able to recognize it properly
+// 替换点、横线、下划线以及驼峰命名为空格，因为粘黏的英文翻译引擎可能无法正常识别。
 export function preprocessText(text: string | undefined) {
 	if (!text) {
 		return "";
 	}
     return text.replace(/\.|-|_/g, ' ')
                .replace(/([a-z])([A-Z])/g, '$1 $2')
-               .replace(/\r\n|\r|\n/g, '. ');
 			   ;
 }
 
@@ -23,7 +24,7 @@ export function getConfigTip(configName: string): string {
 // default display text after assembly translation
 export function genCommonShowInfo(text: string, translatedResult: string): string {
 	text = preprocessText(text);
-	let result = `[${dateUtil.getCurrDateString()}]\n\nProcessing-Results（${translatedResult.length}）：\n${translatedResult}\n\nProcessing-Content（${text.length}）：\n${text}\n`;
+	let result = `[${dateUtil.getCurrDateString()}]\n\n${TAG_LOG_DELIMITER}Processing-Results（${translatedResult.length}）：\n${translatedResult}\n\n${TAG_LOG_DELIMITER}Processing-Content（${text.length}）：\n${text}\n`;
 	return result;
 }
 
@@ -31,11 +32,13 @@ export function genCommonShowInfo(text: string, translatedResult: string): strin
 // default display text after assembly translation
 export function genhtmlShowInfo(text: string, translatedResult: string): string {
 	return `<html><body>
-    <h3>[${dateUtil.getCurrDateString()}]</h3>
+	<h3>[${dateUtil.getCurrDateString()}]</h3>
+	<p>${TAG_LOG_DELIMITER}</p>
     <h3>Processing-Results（${translatedResult.length}）：</h3>
-    <p>${translatedResult}</p>
+    <p>${translatedResult.replaceAll("\n", "<br>")}</p>
 	<br>
+	<p>${TAG_LOG_DELIMITER}</p>
     <h3>Processing-Content（${text.length}）：</h3>
-    <p>${preprocessText(text)}</p>
+    <p>${preprocessText(text).replaceAll("\n", "<br>")}</p>
 </body></html>`;
 }

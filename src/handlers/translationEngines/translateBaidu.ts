@@ -30,7 +30,8 @@ export async function translateText(
         console.log(qs.stringify(params));
         const response = await axios.post('https://fanyi-api.baidu.com/api/trans/vip/translate', qs.stringify(params));
         if (!response.data.error_code) {
-            return response.data.trans_result[0].dst;
+            const dstArray = response.data.trans_result.map((item: any) => item.dst);
+            return dstArray.join('\n');
         } else {
             return `【Error】error_code：${response.data.error_code}，error_msg：${response.data.error_msg}`;
         }

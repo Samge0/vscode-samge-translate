@@ -1,5 +1,13 @@
 # Change Log
 
+[Click here to download the historical version](https://marketplace.visualstudio.com/items?itemName=samge.vscode-samge-translate&ssr=false#version-history)
+
+### 0.0.8 - 2024-05-08
+
+Add the functions mentioned in the [issues](https://github.com/Samge0/vscode-samge-translate/issues/3)：
+- Provide additional optional operation menus after outputting the translation（Replace / Append & Select）.
+- After translating multiple lines of text retain the line breaks in the translated text.
+
 ### 0.0.7 - 2024-02-03
 
 - Add the feature to convert consecutive Chinese characters to English on the left side of the cursor(This feature is not enabled by default; it needs to be activated by selecting the option within the plugin settings.).

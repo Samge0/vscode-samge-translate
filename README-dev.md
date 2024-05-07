@@ -5,6 +5,11 @@ if you want to modify and publish your own plugin you can refer to the following
 - register a [vscode store](https://marketplace.visualstudio.com/) development account
 
 - installation dependencies
+
+```shell
+npm install -g vsce yarn
+```
+
 ```shell
 yarn install
 ```
