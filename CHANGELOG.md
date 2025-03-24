@@ -2,6 +2,12 @@
 
 [Click here to download the historical version](https://marketplace.visualstudio.com/items?itemName=samge.vscode-samge-translate&ssr=false#version-history)
 
+### 0.0.9 - 2025-03-24
+
+Add two switch configuration items:
+- `samge.translate.enableQuickPickSelector`: whether to display the shortcut drop-down option at the top after translation, default:true
+- `samge.translate.enableRightNotify`: whether to display the result pop-up window in the lower right corner default:true.
+
 ### 0.0.8 - 2024-05-08
 
 Add the functions mentioned in the [issues](https://github.com/Samge0/vscode-samge-translate/issues/3)：

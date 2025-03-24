@@ -2,7 +2,7 @@
     "name": "vscode-samge-translate",
     "displayName": "Vscode Samge Translate 翻译助手",
     "description": "Quickly translate text right in your code 🚀 支持多种翻译命令（英译中、中译英、中文转多规则命名变量等），支持多种结果展示方式，支持百度、腾讯、阿里等翻译引擎。",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "engines": {
         "vscode": "^1.85.0"
     },
@@ -125,6 +125,16 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Enable Right Display - 是否在选中文本右侧展示翻译结果，Default：true"
+                },
+                "samge.translate.enableQuickPickSelector": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable Quick Pick Selector - 是否翻译后在顶部显示快捷下拉选项，Default：true"
+                },
+                "samge.translate.enableRightNotify": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable Right Notify Display - 是否在右下角显示结果弹窗，Default：true"
                 },
                 "samge.translate.languageFrom": {
                     "type": "string",

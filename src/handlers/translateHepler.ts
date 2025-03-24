@@ -54,6 +54,8 @@ export let enableThis: boolean = true; // 是否启用插件，Default：true
 let enableHover: boolean = false; // 是否在鼠标悬浮时自动翻译，Default：false
 let enableOutput: boolean = true; // 是否在OUTPUT窗口展示，Default：true
 let enableRightDisplay: boolean = true; // 是否在选中文本右侧展示处理结果，Default：true
+let enableQuickPickSelector: boolean = true; // 是否翻译后在顶部显示快捷下拉选项，Default：true
+let enableRightNotify: boolean = true; // 是否在右下角显示结果弹窗，Default：true
 let languageFrom: string = "en"; // 翻译源语言，Default：en
 let languageTo: string = "zh"; // 翻译目标语言，Default：zh
 let providerName: string = "baidu"; // 翻译引擎提供者，Default：baidu
@@ -76,6 +78,8 @@ export function updateConfig(
 	enableHover = properties.get<boolean>('samge.translate.enableHover', false); // 是否在鼠标悬浮时自动翻译，Default：false
 	enableOutput = properties.get<boolean>('samge.translate.enableOutput', true); // 是否在OUTPUT窗口展示，Default：true
 	enableRightDisplay = properties.get<boolean>('samge.translate.enableRightDisplay', true); // 是否在选中文本右侧展示处理结果，Default：true
+	enableQuickPickSelector = properties.get<boolean>('samge.translate.enableQuickPickSelector', true); // 是否翻译后在顶部显示快捷下拉选项，Default：true
+	enableRightNotify = properties.get<boolean>('samge.translate.enableRightNotify', true); // 是否在右下角显示结果弹窗，Default：true
 	languageFrom = properties.get<string>('samge.translate.translateFrom', 'en'); // 翻译源语言，Default：en
 	languageTo = properties.get<string>('samge.translate.translateTo', 'zh'); // 翻译目标语言，Default：zh
 	providerName = properties.get<string>('samge.translate.providerName', 'baidu'); // 翻译引擎提供者，Default：baidu
@@ -250,7 +254,7 @@ export function handlerResultDisplay(
 	translatedResult: string,
 	enableOutput: boolean,
 	enableRightDisplay: boolean,
-	enableReplace: boolean
+	replaceDirectly: boolean
 ) {
 	// process translated text here
 	console.log(`handlerResultDisplay：${text} => ${translatedResult}`);
@@ -263,19 +267,21 @@ export function handlerResultDisplay(
 	// default pop up prompt in the bottom right corner only displaying text no click event
 	// vscode.window.showInformationMessage(translatedResult);
 	
-	// default pop up prompt in the bottom right corner click event for viewing messages
-	vscode.window.showInformationMessage(translatedResult, "More").then(selection => {
-		if (selection === "More") {
-			// display in webview mode
-			const panel = vscode.window.createWebviewPanel(
-				'translationResult', // identifier
-				'Processing-Results', // panel title
-				vscode.ViewColumn.One, // display in which part of the editor
-				{}
-			);
-			panel.webview.html = tipUtil.genhtmlShowInfo(text, translatedResult);
-		}
-	});
+	// pop up prompt in the bottom right corner click event for viewing messages
+	if (enableRightNotify) {
+		vscode.window.showInformationMessage(translatedResult, "More").then(selection => {
+			if (selection === "More") {
+				// display in webview mode
+				const panel = vscode.window.createWebviewPanel(
+					'translationResult', // identifier
+					'Processing-Results', // panel title
+					vscode.ViewColumn.One, // display in which part of the editor
+					{}
+				);
+				panel.webview.html = tipUtil.genhtmlShowInfo(text, translatedResult);
+			}
+		});
+	}
 
 	// display processing results in the OUTPUT panel
 	if (enableOutput) {
@@ -285,14 +291,18 @@ export function handlerResultDisplay(
 	}
 
 	// display the processing results directly to the right of the selected text
-	if (enableRightDisplay && !enableReplace) {
+	if (enableRightDisplay && !replaceDirectly) {
 		decoration.addDecoration(editor, translatedResult);
 	}
 
 	// optional pop up options, allow users to directly replace selected text or append translations, this feature is only valid for selected text
-	if (editor && !enableReplace) {
+	if (editor && !replaceDirectly) {
 		const hasSelection = editor.selections.some(selection => !selection.isEmpty);
 		if (!hasSelection) {
+			return;
+		}
+
+		if (!enableQuickPickSelector) {
 			return;
 		}
 
@@ -365,7 +375,7 @@ function appendTranslationAndSelect(
 
 
 // english to chinese
-export function handleEn2zh(enableReplace: boolean) {
+export function handleEn2zh(replaceDirectly: boolean) {
 	if (!enableThis) {
 		console.log("enableThis is false，do not execute function handleEn2zh");
 		return;
@@ -379,9 +389,9 @@ export function handleEn2zh(enableReplace: boolean) {
 
 		// calling translation functions
 		translateText(text, providerName, providerAppId, providerAppSecret, languageFrom, languageTo, limitSingleMaximum).then(translatedResult => {
-			handlerResultDisplay(lastEditor, text, translatedResult, enableOutput, enableRightDisplay, enableReplace);
+			handlerResultDisplay(lastEditor, text, translatedResult, enableOutput, enableRightDisplay, replaceDirectly);
 
-			if (enableReplace) {
+			if (replaceDirectly) {
 				replaceEditorSelectedTextWithDisplay(lastEditor, text, translatedResult);
 			}
 		});
@@ -390,7 +400,7 @@ export function handleEn2zh(enableReplace: boolean) {
 
 
 // chinese to english
-export function handleZh2en(enableReplace: boolean) {
+export function handleZh2en(replaceDirectly: boolean) {
 	if (!enableThis) {
 		console.log("enableThis is false，do not execute function handleZh2en");
 		return;
@@ -404,9 +414,9 @@ export function handleZh2en(enableReplace: boolean) {
 		
 		// calling translation functions
 		translateText(text, providerName, providerAppId, providerAppSecret, "zh", "en", limitSingleMaximum).then(translatedResult => {
-			handlerResultDisplay(lastEditor, text, translatedResult, enableOutput, enableRightDisplay, enableReplace);
+			handlerResultDisplay(lastEditor, text, translatedResult, enableOutput, enableRightDisplay, replaceDirectly);
 
-			if (enableReplace) {
+			if (replaceDirectly) {
 				replaceEditorSelectedTextWithDisplay(lastEditor, text, translatedResult);
 			}
 		});
@@ -589,8 +599,9 @@ function replaceEditorSelectedTextWithDisplay(
 			editBuilder.replace(selectionRange, replaceText);
 		}).then(success => {
 			const resultMsg = success ? `successfully replaced text: ${oldText} => ${replaceText}` : "replacing text failed";
-			const enableRightDisplay = false, enableReplace = true;
-			handlerResultDisplay(lastEditor, oldText, resultMsg, enableOutput, enableRightDisplay, enableReplace);
+			const enableRightDisplay = false;
+			const replaceDirectly = true;
+			handlerResultDisplay(lastEditor, oldText, resultMsg, enableOutput, enableRightDisplay, replaceDirectly);
 		});
 	}
 }
