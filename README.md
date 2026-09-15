@@ -49,6 +49,7 @@ VSCode Samge Translate 是一个基于VSCode的`翻译插件`，提供了从`英
 | samge.translate.providerAppId | string |  | 翻译引擎的AppId |
 | samge.translate.providerAppSecret | string |  | 翻译引擎的AppSecret |
 | samge.translate.limitSingleMaximum | integer | 1000 | 单次翻译最大字符限制 |
+| samge.translate.enableTruncateNotify | boolean | true | 文本超过长度限制被截断时是否弹出提示 |
 
 
 ## 快捷键和配置的编辑方法

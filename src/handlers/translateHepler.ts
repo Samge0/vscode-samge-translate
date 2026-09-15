@@ -56,6 +56,7 @@ let enableOutput: boolean = true; // 是否在OUTPUT窗口展示，Default：tru
 let enableRightDisplay: boolean = true; // 是否在选中文本右侧展示处理结果，Default：true
 let enableQuickPickSelector: boolean = true; // 是否翻译后在顶部显示快捷下拉选项，Default：true
 let enableRightNotify: boolean = true; // 是否在右下角显示结果弹窗，Default：true
+let enableTruncateNotify: boolean = true; // 文本超过长度限制被截断时是否弹出提示，Default：true
 let languageFrom: string = "en"; // 翻译源语言，Default：en
 let languageTo: string = "zh"; // 翻译目标语言，Default：zh
 let providerName: string = "baidu"; // 翻译引擎提供者，Default：baidu
@@ -79,7 +80,8 @@ export function updateConfig(
 	enableOutput = properties.get<boolean>('samge.translate.enableOutput', true); // 是否在OUTPUT窗口展示，Default：true
 	enableRightDisplay = properties.get<boolean>('samge.translate.enableRightDisplay', true); // 是否在选中文本右侧展示处理结果，Default：true
 	enableQuickPickSelector = properties.get<boolean>('samge.translate.enableQuickPickSelector', true); // 是否翻译后在顶部显示快捷下拉选项，Default：true
-	enableRightNotify = properties.get<boolean>('samge.translate.enableRightNotify', true); // 是否在右下角显示结果弹窗，Default：true
+    enableRightNotify = properties.get<boolean>('samge.translate.enableRightNotify', true); // 是否在右下角显示结果弹窗，Default：true
+    enableTruncateNotify = properties.get<boolean>('samge.translate.enableTruncateNotify', true); // 文本超过长度限制被截断时是否弹出提示，Default：true
 	languageFrom = properties.get<string>('samge.translate.translateFrom', 'en'); // 翻译源语言，Default：en
 	languageTo = properties.get<string>('samge.translate.translateTo', 'zh'); // 翻译目标语言，Default：zh
 	providerName = properties.get<string>('samge.translate.providerName', 'baidu'); // 翻译引擎提供者，Default：baidu
@@ -221,19 +223,21 @@ export async function translateText(
 	if (text.length > limitSingleMaximum) {
 		// truncate text to ensure its length does not exceed limitSingleMaximum
 		text = text.substring(0, limitSingleMaximum);
-		// prompt when exceeding the length
-		const message = `The text length exceeds the limit of ${limitSingleMaximum}, the text has been truncated, if you need to translate long text please modify the configuration yourself.\n（文本长度超过${limitSingleMaximum}的配置限制，文本已被截断。如果需要翻译长文本，请自行修改配置）`;
-		vscode.window.showInformationMessage(message, "More").then(selection => {
-			if (selection === "More") {
-				const panel = vscode.window.createWebviewPanel(
-					'message', 
-					'Warning Tip',
-					vscode.ViewColumn.One,
-					{}
-				);
-				panel.webview.html = message;
-			}
-		});
+		// prompt when exceeding the length, controlled by samge.translate.enableTruncateNotify
+		if (enableTruncateNotify) {
+			const message = `The text length exceeds the limit of ${limitSingleMaximum}, the text has been truncated, if you need to translate long text please modify the configuration yourself.\n（文本长度超过${limitSingleMaximum}的配置限制，文本已被截断。如果需要翻译长文本，请自行修改配置）`;
+			vscode.window.showInformationMessage(message, "More").then(selection => {
+				if (selection === "More") {
+					const panel = vscode.window.createWebviewPanel(
+						'message',
+						'Warning Tip',
+						vscode.ViewColumn.One,
+						{}
+					);
+					panel.webview.html = message;
+				}
+			});
+		}
 	}
 	console.log(`preprocessed text to be translated：${text}`);
 

@@ -46,6 +46,7 @@ You can install this plugin through the VSCode Extension Marketplace by searchin
 | samge.translate.providerAppId | string |  | AppId for the translation engine |
 | samge.translate.providerAppSecret | string |  | AppSecret for the translation engine |
 | samge.translate.limitSingleMaximum | integer | 1000 | Maximum character limit per translation |
+| samge.translate.enableTruncateNotify | boolean | true | Shows a notification when text exceeds the length limit and gets truncated |
 
 ## Editing Keyboard Shortcuts and Configuration
 
