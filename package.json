@@ -136,6 +136,11 @@
                     "default": true,
                     "description": "Enable Right Notify Display - 是否在右下角显示结果弹窗，Default：true"
                 },
+                "samge.translate.enableTruncateNotify": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable Truncate Notify - 文本超过长度限制被截断时是否弹出提示，Default：true"
+                },
                 "samge.translate.languageFrom": {
                     "type": "string",
                     "default": "en",
